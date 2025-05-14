@@ -8,8 +8,11 @@
 
 # Cap 1 - Construindo uma Máquina Agrícola
 
+<div align="center">
 
-## Nome do Grupo
+|        Grupo             |                   RM                   |
+|:------------------------:|:--------------------------------------:|
+| **Arthur Luiz Rosado Alves** | RM562061                          |
+| **Renan de Oliveira Mendes** | RM563145                          |
 
-- Arthur Luiz Rosado Alves -> RM562061
-- Renan de Oliveira Mendes -> RM563145
+</div>
