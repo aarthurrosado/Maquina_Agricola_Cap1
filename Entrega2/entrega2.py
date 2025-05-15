@@ -6,7 +6,7 @@ from datetime import datetime
 
 # Conexão com banco SQLite
 conn = oracledb.connect(
-     user='rm565606',
+     user='rm563145',
      password="fiap25",
      dsn='oracle.fiap.com.br:1521/ORCL')
 cursor = conn.cursor()
