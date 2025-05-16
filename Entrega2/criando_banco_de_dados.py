@@ -1,7 +1,6 @@
 import oracledb
-from datetime import datetime
 
-# Conexão com banco Oracle
+# Conexão com o banco
 conn = oracledb.connect(
      user='RM563145',
      password="260399",
@@ -9,13 +8,13 @@ conn = oracledb.connect(
 )
 cursor = conn.cursor()
 
-# Criando as tabelas
+# Tabela FAZENDA
 cursor.execute("""
 BEGIN
     EXECUTE IMMEDIATE '
         CREATE TABLE FAZENDA (
             id_fazenda NUMBER PRIMARY KEY,
-            nome_fazenda VARCHAR2(100),
+            nome_fazenda VARCHAR2(20),
             loc_fazenda VARCHAR2(100),
             area_plantio FLOAT,
             unidade_medida_area VARCHAR2(20)
@@ -27,18 +26,19 @@ EXCEPTION
 END;
 """)
 
+# Tabela CULTURAS
 cursor.execute("""
 BEGIN
     EXECUTE IMMEDIATE '
         CREATE TABLE CULTURAS (
             id_cultura NUMBER PRIMARY KEY,
             id_fazenda NUMBER,
-            nome_cultura VARCHAR2(100),
-            tipo_cultura VARCHAR2(100),
+            nome_cultura VARCHAR2(20),
+            tipo_cultura VARCHAR2(20),
             area_cultura FLOAT,
             data_plantio DATE,
             data_colheita DATE,
-            status_cultura VARCHAR2(50),
+            status_cultura VARCHAR2(20),
             FOREIGN KEY (id_fazenda) REFERENCES FAZENDA(id_fazenda)
         )
     ';
@@ -48,6 +48,7 @@ EXCEPTION
 END;
 """)
 
+# Tabela SENSOR_PH
 cursor.execute("""
 BEGIN
     EXECUTE IMMEDIATE '
@@ -58,7 +59,7 @@ BEGIN
             valor_PH FLOAT,
             variacao_PH FLOAT,
             data_hora TIMESTAMP,
-            status_sensor VARCHAR2(50),
+            status_sensor VARCHAR2(20),
             loc_sensor VARCHAR2(100),
             FOREIGN KEY (id_cultura) REFERENCES CULTURAS(id_cultura)
         )
@@ -69,8 +70,72 @@ EXCEPTION
 END;
 """)
 
-conn.commit()
+# Tabela SENSOR_UMIDADE
+cursor.execute("""
+BEGIN
+    EXECUTE IMMEDIATE '
+        CREATE TABLE SENSOR_UMIDADE (
+            id_sensor_umidade NUMBER PRIMARY KEY,
+            id_cultura NUMBER,
+            umidade_registrada FLOAT(5,2),
+            quantidade_aplic NUMBER,
+            unidade_med_umi VARCHAR2(20),
+            var_umidade FLOAT(5,2),
+            data_hora_aplic TIMESTAMP,
+            status_sensor VARCHAR2(20),
+            loc_sensor VARCHAR2(100),
+            FOREIGN KEY (id_cultura) REFERENCES CULTURAS(id_cultura)
+        )
+    ';
+EXCEPTION
+    WHEN OTHERS THEN
+        IF SQLCODE != -955 THEN RAISE; END IF;
+END;
+""")
 
+# Tabela SENSOR_NUTRIENTES
+cursor.execute("""
+BEGIN
+    EXECUTE IMMEDIATE '
+        CREATE TABLE SENSOR_NUTRIENTES (
+            id_sensor_nutri NUMBER PRIMARY KEY,
+            id_cultura NUMBER,
+            var_nutri FLOAT(5,2),
+            dt_aplic_nutri TIMESTAMP,
+            status_sensor VARCHAR2(20),
+            loc_sensor VARCHAR2(100),
+            FOREIGN KEY (id_cultura) REFERENCES CULTURAS(id_cultura)
+        )
+    ';
+EXCEPTION
+    WHEN OTHERS THEN
+        IF SQLCODE != -955 THEN RAISE; END IF;
+END;
+""")
+
+# Tabela NUTRIENTE_REGISTRADO
+cursor.execute("""
+BEGIN
+    EXECUTE IMMEDIATE '
+        CREATE TABLE NUTRIENTE_REGISTRADO (
+            id_nutri NUMBER PRIMARY KEY,
+            id_sensor_nutri NUMBER,
+            nome_nutri VARCHAR2(20),
+            quantidade_reg FLOAT(7,2),
+            unidade_medida VARCHAR2(20),
+            dt_registro TIMESTAMP,
+            FOREIGN KEY (id_sensor_nutri) REFERENCES SENSOR_NUTRIENTES(id_sensor_nutri)
+        )
+    ';
+EXCEPTION
+    WHEN OTHERS THEN
+        IF SQLCODE != -955 THEN RAISE; END IF;
+END;
+""")
+
+# Finalizando
+conn.commit()
 cursor.close()
 conn.close()
+
 
