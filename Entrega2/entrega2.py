@@ -3,8 +3,8 @@ from datetime import datetime
 
 # Conexão com banco Oracle
 conn = oracledb.connect(
-     user='rm563145',
-     password="fiap25",
+     user='RM563145',
+     password="260399",
      dsn='oracle.fiap.com.br:1521/ORCL'
 )
 cursor = conn.cursor()
@@ -70,33 +70,6 @@ END;
 """)
 
 conn.commit()
-
-def inserir_sensor_ph(id_cultura, valor_PH, variacao_PH, status_sensor, loc_sensor):
-    data_hora = datetime.now()
-    cursor.execute("""
-        INSERT INTO SENSOR_PH (
-            id_cultura, PH_registrado, valor_PH, variacao_PH, data_hora, status_sensor, loc_sensor
-        )
-        VALUES (:1, :2, :3, :4, :5, :6, :7)
-    """, (id_cultura, valor_PH, valor_PH, variacao_PH, data_hora, status_sensor, loc_sensor))
-    conn.commit()
-
-def consultar_sensores_ph():
-    cursor.execute("SELECT * FROM SENSOR_PH")
-    for linha in cursor.fetchall():
-        print(linha)
-
-def atualizar_ph(id_senso_PH, novo_valor_PH):
-    cursor.execute("""
-        UPDATE SENSOR_PH
-        SET valor_PH = :1, PH_registrado = :2
-        WHERE id_senso_PH = :3
-    """, (novo_valor_PH, novo_valor_PH, id_senso_PH))
-    conn.commit()
-
-def remover_sensor_ph(id_senso_PH):
-    cursor.execute("DELETE FROM SENSOR_PH WHERE id_senso_PH = :1", (id_senso_PH,))
-    conn.commit()
 
 cursor.close()
 conn.close()
