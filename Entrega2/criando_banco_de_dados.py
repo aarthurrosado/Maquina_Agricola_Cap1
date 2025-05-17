@@ -113,26 +113,6 @@ EXCEPTION
 END;
 """)
 
-# Tabela NUTRIENTE_REGISTRADO
-cursor.execute("""
-BEGIN
-    EXECUTE IMMEDIATE '
-        CREATE TABLE NUTRIENTE_REGISTRADO (
-            id_nutri NUMBER PRIMARY KEY,
-            id_sensor_nutri NUMBER,
-            nome_nutri VARCHAR2(20),
-            quantidade_reg FLOAT(7,2),
-            unidade_medida VARCHAR2(20),
-            dt_registro TIMESTAMP,
-            FOREIGN KEY (id_sensor_nutri) REFERENCES SENSOR_NUTRIENTES(id_sensor_nutri)
-        )
-    ';
-EXCEPTION
-    WHEN OTHERS THEN
-        IF SQLCODE != -955 THEN RAISE; END IF;
-END;
-""")
-
 # Finalizando
 conn.commit()
 cursor.close()
