@@ -10,8 +10,10 @@ Este projeto é uma aplicação Python que realiza a conexão com um banco de da
 
 # Faça em um ambiente virtual:
 python -m venv venv
+
 Windows:
 venv\Scripts\activate
+
 Linux/Mac:
 source venv/bin/activate
 
