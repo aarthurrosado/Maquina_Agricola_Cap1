@@ -30,4 +30,4 @@ Estão no arquivo "requirements.txt"
   </p>
 
 ## Vantagens:
-### Simples, objetivo e claro para todos. Facilitando a análise dos operadores da situação e métrica dos sensores.
+### Simples, objetivo e claro para todos. Facilitando a análise da situação e das métrica dos sensores.
