@@ -49,4 +49,4 @@ if uploaded_file:
             st.plotly_chart(fig_p, use_container_width=True)
 
 else:
-    st.warning("Faça o upload de um arquivo `.xlsx` com abas: ph, umidade, nutrientes, bomba.")
+    st.warning("Faça o upload de um arquivo `.xlsx` com abas: SENSOR_PH, SENSOR_FOSFORO e SENSOR_POTASSIO")
