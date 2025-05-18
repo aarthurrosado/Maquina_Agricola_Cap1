@@ -2,27 +2,32 @@
 
 Desenvolvemos uma aplicação Python simples, conectada ao Streamlit Cloud.
 A aplicação permite subir dados especificos de sensores e realiza análises gráficas.
-Como exemplo e modelo utilizamos os dados "dados_usados_exemplo.xlsx"
-<img src ="" >
-## 📦 Requisitos
+Como exemplo e modelo utilizamos o arquivo excel "dados_usados_exemplo.xlsx"
+<p align="center">
+<img src = "assets/dados_ex.png">
+  </p>
 
-- Python 3.7 ou superior
-- Oracle Client (opcional, mas recomendado para modo "thick")
-- Módulo `oracledb`
+  
+## ✔ Requisitos e Dependências:
 
-# Faça em um ambiente virtual:
-python -m venv venv
+Estão no arquivo "requirements.txt"
+- streamlit
+- pandas
+- openpyxl
+- plotly
 
-Windows:
-venv\Scripts\activate
+## Aplicação:
+- Acesse o site/link: https://iralem1-bwijfxac6pnyejvlgecic7.streamlit.app
+- Suba um excel comforme o formato de dados_usados_exemplo.xlsx.
+- Será gerado uma análise visual automaticamente dos dados de Sensores.
 
-Linux/Mac:
-source venv/bin/activate
+<p align="center">
+<img src = "assets/streamlit1.png">
+  </p>
 
-# Dependências:
-pip install oracledb
+<p align="center">
+<img src = "assets/streamlit.png">
+  </p>
 
-# Banco de dados
-Foi criado um banco de dados Oracle simulando a captação de registros de sensores.
-
-<img src="assets/sqlcap14.png">
+## Vantagens:
+### Simples, objetivo e claro para todos. Facilitando a análise dos operadores da situação e métrica dos sensores.
