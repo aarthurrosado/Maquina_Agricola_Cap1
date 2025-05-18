@@ -23,5 +23,5 @@ pip install oracledb
 # Banco de dados
 Foi criado um banco de dados Oracle simulando a captação de registros de sensores.
 
-<img src="Maquina_Agricola_Cap1/assets/sqlcap14.png">
+<img src="assets/sqlcap14.png">
 
