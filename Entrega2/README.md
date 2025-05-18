@@ -1,4 +1,4 @@
-# 🐍 Aplicação Python com Conexão Oracle
+# Aplicação Python com Conexão Oracle
 
 Este projeto é uma aplicação Python que realiza a conexão com um banco de dados Oracle utilizando o módulo `oracledb`.
 
@@ -8,19 +8,12 @@ Este projeto é uma aplicação Python que realiza a conexão com um banco de da
 - Oracle Client (opcional, mas recomendado para modo "thick")
 - Módulo `oracledb`
 
-## 🔧 Instalação
-
-### 1. Clone o repositório
-
-```bash
-git clone https://github.com/seu-usuario/seu-repo.git
-cd seu-repo
-```
+# Faça em um ambiente virtual:
 python -m venv venv
-# Windows:
+Windows:
 venv\Scripts\activate
-# Linux/Mac:
+Linux/Mac:
 source venv/bin/activate
 
+# Dependências:
 pip install oracledb
-
