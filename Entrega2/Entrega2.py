@@ -1,314 +1,305 @@
-import oracledb
-from datetime import datetime
+# -*- coding: utf-8 -*-
 import os
+import sys
+from datetime import datetime
 
-# Código para inserção Manual e Manipulação CRUD dos dados
-# Criando conexão
-try:
-    # Efetua a conexão com o Usuário no servidor
-    conn = oracledb.connect(user='RM563145', password="260399", dsn='oracle.fiap.com.br:1521/ORCL')
-    cursor = conn.cursor()
+import oracledb
 
-    # Cria as instruções para cada opção
-    inst_cadastro = conn.cursor()
-    inst_consulta = conn.cursor()
-    inst_alteracao = conn.cursor()
-    inst_exclusao = conn.cursor()
+DSN = "oracle.fiap.com.br:1521/ORCL"
+USER = "RM563145"
+PASSWORD = "260399"
 
-except Exception as e:
-    # Informa o erro
-    print("Erro: ", e)
-    conexao = False
-else:
-    # Flag para executar
-    conexao = True
+# Conexão
+def obter_conexao():
+    """Tenta criar a conexão com o banco"""
+    try:
+        conn = oracledb.connect(user=USER, password=PASSWORD, dsn=DSN)
+        cursor = conn.cursor()
+        return conn, cursor
+    except Exception as exc:
+        print(f"Erro ao conectar no banco: {exc}")
+        return None, None
 
-#--------------------------------------------------------------------------------------------------------------
 
-# Funções de inserção
+conn, cursor = obter_conexao()
+if conn is None:
+    sys.exit(1)
 
-# PH
-def inserir_sensor_ph(PH_registrado, status_sensor, loc_sensor):
+
+# ---------------------------------------------------------------------------
+
+# Funções
+
+
+def limpar_tela():
+    """Limpa a tela"""
+    os.system("cls" if os.name == "nt" else "clear")
+
+
+def ler_float(msg: str) -> float:
+    """Solicita ao usuário um número"""
+    while True:
+        try:
+            return float(input(msg))
+        except ValueError:
+            print("Valor inválido! Digite um número.")
+
+
+def ler_int(msg: str) -> int:
+    """Solicita ao usuário um inteiro até que ele digite algo válido."""
+    while True:
+        try:
+            return int(input(msg))
+        except ValueError:
+            print("Digite um número inteiro válido.")
+
+
+# ---------------------------------------------------------------------------
+
+# CRUD – Inserção
+
+
+def inserir_sensor_ph(ph_registrado: float, status_sensor: str, loc_sensor: str):
     data_hora = datetime.now()
-    cursor.execute("""
-        INSERT INTO SENSOR_PH (
-           PH_registrado, data_hora, status_sensor, loc_sensor
-        )
+    cursor.execute(
+        """
+        INSERT INTO SENSOR_PH (PH_registrado, data_hora, status_sensor, loc_sensor)
         VALUES (:1, :2, :3, :4)
-    """, (PH_registrado, data_hora, status_sensor, loc_sensor))
+        """,
+        (ph_registrado, data_hora, status_sensor, loc_sensor),
+    )
     conn.commit()
 
-# Fósforo
-def inserir_sensor_fosforo(Fosforo_registrado, status_sensor, loc_sensor):
+
+def inserir_sensor_fosforo(fosforo_registrado: float, status_sensor: str, loc_sensor: str):
     data_hora = datetime.now()
-    cursor.execute("""
-        INSERT INTO SENSOR_Fosforo (
-           Fosforo_registrado, data_hora, status_sensor, loc_sensor
-        )
+    cursor.execute(
+        """
+        INSERT INTO SENSOR_FOSFORO (Fosforo_registrado, data_hora, status_sensor, loc_sensor)
         VALUES (:1, :2, :3, :4)
-    """, (Fosforo_registrado, data_hora, status_sensor, loc_sensor))
-    conn.commit() 
+        """,
+        (fosforo_registrado, data_hora, status_sensor, loc_sensor),
+    )
+    conn.commit()
 
-# Potássio
-def inserir_sensor_potassio(Potassio_registrado, status_sensor, loc_sensor):
+
+def inserir_sensor_potassio(potassio_registrado: float, status_sensor: str, loc_sensor: str):
     data_hora = datetime.now()
-    cursor.execute("""
-        INSERT INTO SENSOR_Potassio (
-           Potassio_registrado, data_hora, status_sensor, loc_sensor
-        )
+    cursor.execute(
+        """
+        INSERT INTO SENSOR_POTASSIO (Potassio_registrado, data_hora, status_sensor, loc_sensor)
         VALUES (:1, :2, :3, :4)
-    """, (Potassio_registrado, data_hora, status_sensor, loc_sensor))
-    conn.commit() 
+        """,
+        (potassio_registrado, data_hora, status_sensor, loc_sensor),
+    )
+    conn.commit()
 
 
-# Funções de consulta
+# ---------------------------------------------------------------------------
 
-def consultar_sensores_ph():
-    cursor.execute("SELECT * FROM SENSOR_PH")
-    for linha in cursor.fetchall():
-        print(linha)
+# CRUD – Consulta
 
-def consultar_sensores_fosforo():
-    cursor.execute("SELECT * FROM SENSOR_Fosforo")
-    for linha in cursor.fetchall():
-        print(linha)
 
-def consultar_sensores_fosforo():
-    cursor.execute("SELECT * FROM SENSOR_Potassio")
-    for linha in cursor.fetchall():
-        print(linha)
+def consultar(tabela: str):
+    cursor.execute(f"SELECT * FROM {tabela}")
+    return cursor.fetchall()
 
-# Funções de atualização
 
-def atualizar_ph(id_senso_PH, novo_valor_PH):
-    cursor.execute("""
+# ---------------------------------------------------------------------------
+
+# CRUD – Atualização
+
+
+def atualizar_sensor_ph(id_sensor_ph: int, novo_valor: float):
+    cursor.execute(
+        """
         UPDATE SENSOR_PH
         SET PH_registrado = :1
-        WHERE id_senso_PH = :2
-    """, (novo_valor_PH, id_senso_PH))
-    conn.commit()
-
-def atualizar_fosforo( id_sensor_Fosforo, novo_valor_fosforo):
-    cursor.execute("""
-        UPDATE SENSOR_Fosforo
-        Fosforo_registrado = :1
-        WHERE id_sensor_Fosforo = :2
-    """, (novo_valor_fosforo,   id_sensor_Fosforo))
-    conn.commit()
-
-def atualizar_potassio( id_sensor_Potassio, novo_valor_potassio):
-    cursor.execute("""
-        UPDATE SENSOR_Potassio
-        Fosforo_registrado = :1
-        WHERE id_sensor_Potassio = :2
-    """, (novo_valor_potassio,   id_sensor_Potassio))
-    conn.commit()
-
-def remover_sensor_ph(id_senso_PH):
-    cursor.execute("DELETE FROM SENSOR_PH WHERE id_senso_PH = :1", (id_senso_PH,))
+        WHERE id_sensor_ph = :2
+        """,
+        (novo_valor, id_sensor_ph),
+    )
     conn.commit()
 
 
-# Funções de exclusão
-
-def remover_sensor_ph(id_senso_PH):
-    cursor.execute("DELETE FROM SENSOR_PH WHERE id_senso_PH = :1", (id_senso_PH,))
-    conn.commit()
-
-def remover_sensor_fosforo(id_sensor_Fosforo):
-    cursor.execute("DELETE FROM SENSOR_Fosforo WHERE id_sensor_Fosforo = :1", (id_sensor_Fosforo,))
-    conn.commit()
-
-def remover_sensor_potassioo(id_sensor_Potassio):
-    cursor.execute("DELETE FROM SENSOR_Potassio WHERE id_sensor_Potassio = :1", (id_sensor_Potassio,))
+def atualizar_sensor_fosforo(id_sensor_fosforo: int, novo_valor: float):
+    cursor.execute(
+        """
+        UPDATE SENSOR_FOSFORO
+        SET Fosforo_registrado = :1
+        WHERE id_sensor_fosforo = :2
+        """,
+        (novo_valor, id_sensor_fosforo),
+    )
     conn.commit()
 
 
-#------------------------------------------------------------------------------------------------------------
+def atualizar_sensor_potassio(id_sensor_potassio: int, novo_valor: float):
+    cursor.execute(
+        """
+        UPDATE SENSOR_POTASSIO
+        SET Potassio_registrado = :1
+        WHERE id_sensor_potassio = :2
+        """,
+        (novo_valor, id_sensor_potassio),
+    )
+    conn.commit()
 
-while conexao:
-    os.system('cls')
 
-    # Menu
-    print("------- Dados Sensores -------")
-    print("""
-    1 - Inserir Dados
-    2 - Consultar Dados
-    3 - Alterar Dados
-    4 - Excluir Dados
-    6 - SAIR
-    """)
+# ---------------------------------------------------------------------------
 
-    # Pegar input
-    escolha = input("Selecione -> ")
+# CRUD – Remoção
 
-    # Verificar valor digitado
-    if escolha.isdigit():
-        escolha = int(escolha)
+
+def remover_sensor_ph(id_sensor_ph: int):
+    cursor.execute("DELETE FROM SENSOR_PH WHERE id_sensor_ph = :1", (id_sensor_ph,))
+    conn.commit()
+
+
+def remover_sensor_fosforo(id_sensor_fosforo: int):
+    cursor.execute(
+        "DELETE FROM SENSOR_FOSFORO WHERE id_sensor_fosforo = :1", (id_sensor_fosforo,)
+    )
+    conn.commit()
+
+
+def remover_sensor_potassio(id_sensor_potassio: int):
+    cursor.execute(
+        "DELETE FROM SENSOR_POTASSIO WHERE id_sensor_potassio = :1", (id_sensor_potassio,)
+    )
+    conn.commit()
+
+
+# --------------------------------------------------------------------------
+
+# Menu – Camada de Interface
+
+
+def menu_principal():
+    while True:
+        limpar_tela()
+        print("""\n======= MENU PRINCIPAL =======
+1 – Inserir dados
+2 – Consultar dados
+3 – Atualizar dados
+4 – Remover dados
+5 – Sair
+===============================""")
+
+        opcao = ler_int("Escolha uma opção: ")
+
+        if opcao == 1:
+            inserir_dados_cli()
+        elif opcao == 2:
+            consultar_dados_cli()
+        elif opcao == 3:
+            atualizar_dados_cli()
+        elif opcao == 4:
+            remover_dados_cli()
+        elif opcao == 5:
+            break
+        else:
+            print("Opção inválida!")
+            input("Pressione ENTER para continuar…")
+
+    print("\nObrigado por utilizar a aplicação! :)\n")
+
+
+# ---------------------------------------------------------------------------
+
+# Funções auxiliares do menu
+
+def escolher_sensor() -> int:
+    print("""\n--- Sensores ---
+1 – pH
+2 – Fósforo
+3 – Potássio""")
+    return ler_int("Escolha o sensor: ")
+
+
+#  Inserir
+
+def inserir_dados_cli():
+    sensor = escolher_sensor()
+    valor = ler_float("Digite o valor registrado: ")
+    status = input("Status do sensor: ")
+    loc = input("Localização do sensor: ")
+
+    if sensor == 1:
+        inserir_sensor_ph(valor, status, loc)
+    elif sensor == 2:
+        inserir_sensor_fosforo(valor, status, loc)
+    elif sensor == 3:
+        inserir_sensor_potassio(valor, status, loc)
     else:
-        escolha = 6
-        print("Digite um número.\nReinicie a Aplicação!")
+        print("Sensor inválido!")
+    input("\nDados gravados. Pressione ENTER…")
 
-    os.system('cls')  # Limpa a tela
 
-    # Lógica de escolha
-    match escolha:
+# Consultar
 
-        # Inserir valor
-        case 1:
-            try:
-                print("----- Escolha o Sensor -----\n")
-                print("----- 1 para PH -----\n")
-                print("----- 2 para Fósforo -----\n")
-                print("----- 3 para Potássio -----\n")
-                escolha_sensor = input("Selecione -> ")
-                if escolha_sensor == 1:
-                    inserir_sensor_ph(
-                    Ph =input("Digite o valor do PH"),
-                    status = input("Digite o status do sensor"),
-                    loc = input("Digite a localização do sensor "))           
-                if escolha_sensor == 2:
-                    inserir_sensor_fosforo(
-                    Ph =input("Digite o valor do Fósforo"),
-                    status = input("Digite o status do sensor"),
-                    loc = input("Digite a localização do sensor "))
-                if escolha_sensor == 3:
-                    inserir_sensor_potassio(
-                    Ph =input("Digite o valor do Potássio"),
-                    status = input("Digite o status do sensor"),
-                    loc = input("Digite a localização do sensor "))
-            except ValueError:
-                print("Digite um número")
-            else:
-                    # Caso haja sucesso na gravação
-                    print("\n##### Dados Gravados #####")
+def consultar_dados_cli():
+    sensor = escolher_sensor()
+    tabelas = {1: "SENSOR_PH", 2: "SENSOR_FOSFORO", 3: "SENSOR_POTASSIO"}
+    tabela = tabelas.get(sensor)
+    if not tabela:
+        print("Sensor inválido!")
+        input("Pressione ENTER…")
+        return
+    dados = consultar(tabela)
+    if not dados:
+        print("\nNão há registros.")
+    else:
+        for linha in dados:
+            print(linha)
+    input("\nPressione ENTER…")
 
-        # LISTAR TODOS OS PETS
-        case 2:
-             try:
-                print("----- Escolha o Sensor -----\n")
-                print("----- 1 para PH -----\n")
-                print("----- 2 para Fósforo -----\n")
-                print("----- 3 para Potássio -----\n")
-                escolha_sensor = input("Selecione -> ")
-                if escolha_sensor == 1:
-                    consultar_sensores_ph
-                    lista_dados = []           
-                if escolha_sensor == 2:
-                    inserir_sensor_fosforo(
-                    Ph =input("Digite o valor do Fósforo"),
-                    status = input("Digite o status do sensor"),
-                    loc = input("Digite a localização do sensor "))
-                if escolha_sensor == 3:
-                    inserir_sensor_potassio(
-                    Ph =input("Digite o valor do Potássio"),
-                    status = input("Digite o status do sensor"),
-                    loc = input("Digite a localização do sensor "))
-             except ValueError:
-                print("Digite um número")
-             else:
-                    # Caso haja sucesso na gravação
-                    print("\n##### Dados Gravados #####")
 
-        # ALTERAR OS DADOS DE UM REGISTRO
-        case 3:
-            try:
-                # ALTERANDO UM REGISTRO
-                print("----- ALTERAR DADOS DO PET -----\n")
+# Atualizar
 
-                lista_dados = []  # Lista para captura de dados da tabela
+def atualizar_dados_cli():
+    sensor = escolher_sensor()
+    id_registro = ler_int("ID do registro que deseja alterar: ")
+    novo_valor = ler_float("Novo valor: ")
 
-                pet_id = int(input(margem + "Escolha um Id: "))  # Permite o usuário escolher um Pet pelo id
+    if sensor == 1:
+        atualizar_sensor_ph(id_registro, novo_valor)
+    elif sensor == 2:
+        atualizar_sensor_fosforo(id_registro, novo_valor)
+    elif sensor == 3:
+        atualizar_sensor_potassio(id_registro, novo_valor)
+    else:
+        print("Sensor inválido!")
+    input("\nRegistro atualizado. Pressione ENTER…")
 
-                # Constrói a instrução de consulta para verificar a existência ou não do id
-                consulta = f""" SELECT * FROM petshop WHERE id = {pet_id}"""
-                inst_consulta.execute(consulta)
-                data = inst_consulta.fetchall()
 
-                # Preenche a lista com o registro encontrado (ou não)
-                for dt in data:
-                    lista_dados.append(dt)
+# Remover
 
-                # analisa se foi encontrado algo
-                if len(lista_dados) == 0: # se não há o id
-                    print(f"Não há um pet cadastrado com o ID = {pet_id}")
-                    input("\nPressione ENTER")
-                else:
-                    # Captura os novos dados
-                    novo_tipo = input(margem + "Digite um novo tipo: ")
-                    novo_nome = input(margem + "Digite um novo nome: ")
-                    nova_idade = input(margem + "Digite uma nova idade: ")
+def remover_dados_cli():
+    sensor = escolher_sensor()
+    id_registro = ler_int("ID do registro que deseja remover: ")
 
-                    # Constrói a instrução de edição do registro com os novos dados
-                    alteracao = f"""
-                    UPDATE petshop SET tipo_pet='{novo_tipo}', nome_pet='{novo_nome}', idade='{nova_idade}' WHERE id={pet_id}
-                    """
-                    inst_alteracao.execute(alteracao)
-                    conn.commit()
-            except ValueError:
-                    print("Digite um número na idade!")
-            except:
-                print(margem + "Erro na transação do BD")
-            else:
-                print("\n##### Dados ATUALIZADOS! #####")
+    if sensor == 1:
+        remover_sensor_ph(id_registro)
+    elif sensor == 2:
+        remover_sensor_fosforo(id_registro)
+    elif sensor == 3:
+        remover_sensor_potassio(id_registro)
+    else:
+        print("Sensor inválido!")
+    input("\nRegistro removido. Pressione ENTER…")
 
-        # EXCLUIR UM REGISTRO
-        case 4:
-            print("----- EXCLUIR PET -----\n")
-            lista_dados = []  # Lista para captura de dados da tabela
-            pet_id = input(margem + "Escolha um Id: ")  # Permite o usuário escolher um Pet pelo ID
-            if pet_id.isdigit():
-                pet_id = int(pet_id)
-                consulta = f""" SELECT * FROM petshop WHERE id = {pet_id}"""
-                inst_consulta.execute(consulta)
-                data = inst_consulta.fetchall()
 
-                # Insere os valores da tabela na lista
-                for dt in data:
-                    lista_dados.append(dt)
+# ---------------------------------------------------------------------------
 
-                # Verifica se o registro está cadastrado
-                if len(lista_dados) == 0:
-                    print(f"Não há um pet cadastrado com o ID = {pet_id}")
-                else:
-                    # Cria a instrução SQL de exclusão pelo ID
-                    exclusao = f"DELETE FROM petshop WHERE id={pet_id}"
-                    # Executa a instrução e atualiza a tabela
-                    inst_exclusao.execute(exclusao)
-                    conn.commit()
-                    print("\n##### Pet APAGADO! #####")  # Exibe mensagem caso haja sucesso
-            else:
-                print("O Id não é numérico!")
+# Execução principal
 
-        # EXCLUIR TODOS OS REGISTROS
-        case 5:
-            print("\n!!!!! EXCLUI TODOS OS DADOS TABELA !!!!!\n")
-            confirma = input(margem + "CONFIRMA A EXCLUSÃO DE TODOS OS PETS? [S]im ou [N]ÃO?")
-            if confirma.upper() == "S":
-                # Apaga todos os registros
-                exclusao = "DELETE FROM petshop"
-                inst_exclusao.execute(exclusao)
-                conn.commit()
-
-                # Depois de excluir todos os registros ele zera o ID
-                data_reset_ids = """ ALTER TABLE petshop MODIFY(ID GENERATED AS IDENTITY (START WITH 1)) """
-                inst_exclusao.execute(data_reset_ids)
-                conn.commit()
-
-                print("##### Todos os registros foram excluídos! #####")
-            else:
-                print(margem + "Operação cancelada pelo usuário!")
-
-        # SAI DA APLICAÇÃO
-        case 6:
-            # Modificando o flag da conexão
-            conexao = False
-
-        # CASO O NUMERO DIGITADO NÃO SEJA UM DO MENU
-        case _:
-            input(margem + "Digite um número entre 1 e 6.")
-
-    # Pausa o fluxo da aplicação para a leitura das informações
-    input(margem + "Pressione ENTER")
-else:
-    print("Obrigado por utilizar a nossa aplicação! :)")
+if __name__ == "__main__":
+    try:
+        menu_principal()
+    finally:
+        # Garantir que as conexões sejam fechadas mesmo em caso de erro.
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
