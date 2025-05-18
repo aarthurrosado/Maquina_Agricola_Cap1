@@ -39,14 +39,14 @@ def verificar_bomba(data):
 
     if chuva_prevista:
         status_bomba = "DESLIGADA (chuva prevista)"
-    elif umidade_atual < 40:
+    elif umidade_atual < 50:
         status_bomba = "LIGADA (baixa umidade e sem chuva prevista)"
     else:
         status_bomba = "DESLIGADA (condições aceitáveis)"
 
     return temperatura_atual, umidade_atual, chuva_prevista, status_bomba
 
-# ----------- EXECUÇÃO PRINCIPAL -----------
+# ----------- Execução  -----------
 try:
     cidade = input("Digite o nome da cidade: ")
     latitude, longitude, nome_local = obter_coordenadas(cidade)
@@ -58,7 +58,7 @@ try:
     print(f"Temperatura: {temp}°C")
     print(f"Umidade relativa do ar: {umi}%")
     print(f"Previsão de chuva nas próximas 12h: {'Sim' if chuva else 'Não'}")
-    print(f"\n🚰 Status da bomba de irrigação: {status}")
+    print(f"\n Status da bomba de irrigação: {status}")
 
 except ValueError as e:
     print(f"Erro: {e}")
