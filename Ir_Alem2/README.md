@@ -15,12 +15,5 @@ Está no arquivo "requirements.txt"
 - O sistema escolhe se ativa ou não a bomba de irrigação.
 
 <p align="center">
-<img src = "assets/streamlit1.png">
+<img src = "assets/IrAlemII.png">
   </p>
-
-<p align="center">
-<img src = "assets/streamlit.png">
-  </p>
-
-## Vantagens:
-### Simples, objetivo e claro para todos. Facilitando a análise da situação e das métrica dos sensores.
