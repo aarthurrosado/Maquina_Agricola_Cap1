@@ -25,7 +25,7 @@ if uploaded_file:
                 df['data_hora'] = pd.to_datetime(df['data_hora'])
 
         # Abas do dashboard
-        tab1, tab2, tab3, tab4 = st.tabs(["PH", "Fósforo", "Potássio"])
+        tab1, tab2, tab3 = st.tabs(["PH", "Fósforo", "Potássio"])
 
         with tab1:
             st.subheader("Níveis de PH")
