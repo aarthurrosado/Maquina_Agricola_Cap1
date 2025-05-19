@@ -16,3 +16,20 @@
 | **Renan de Oliveira Mendes** | RM563145                          |
 
 </div>
+
+# Entrega1 
+
+### Circuito de Sensores |  Código em C  |  Documentação
+
+# Entrega2 
+
+### Script em Python de Armazenamento de Dados |  Operações (CRUD)
+
+
+# Ir_Alem1
+
+#### Dashboard em Python |  Streamlit
+
+# Ir_Alem2
+
+### Aplicação Python com API Pública
